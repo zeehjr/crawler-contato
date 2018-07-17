@@ -4,15 +4,24 @@
 
 const axios = require ('axios')
 const cheerio = require('cheerio')
+const fs = require('fs')
 
 /************************* 
 |  TUTORIAL - COMO USAR  |
 *************************/
 
-if (process.argv[2] === undefined) {
-  console.log('Utilize o comando: node crawler.js [palavra_chave]')
+if (process.argv[2] === undefined || process.argv[3] === undefined) {
+  console.log('Utilize o comando: node crawler.js [palavra_chave] [nome_arquivo_saida]')
   return
 }
+
+/***************
+|  CONSTANTES  |
+***************/
+
+const regexLinks = /href="(http[^"]+)/g;
+const regexEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\W{2,3})+$/g;
+const regexTelefone = /\(?\d{2,3}?\)?[ -]?\d{4,5}[ -]?\d{4}/g;
 
 /*********************
 | VARIÁVEIS GLOBAIS  |
@@ -21,8 +30,8 @@ if (process.argv[2] === undefined) {
 const palavra_chave = process.argv[2] // Ex: cabeleireiro são paulo
 const paginas = 10 // número de páginas a serem pesquisadas 
 const intervalo = 5 // tempo em segundos para cada pesquisa
-const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\W{2,3})+$/;
-const telefoneRegex = /(\(?\d{2}\)?)? ?\d{4,5}-? ?\d{4}/;
+const regexEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\W{2,3})+$/g;
+const regexTelefone = /(\(?\d{2}\)?)? ?\d{4,5}-? ?\d{4}/g;
 
 /****************************
 |  TELA INICIAL DO SISTEMA  |
@@ -68,7 +77,8 @@ async function requisicao (_pagina) {
   .then(function (response) {
     //const $ = cheerio.load(response.data)
     //const links = $('#b_content #b_results li')
-    console.log('SUCESSO!')
+    console.log('SUCESSO!');
+	
     return true
   })
   .catch(function (error) {
@@ -78,7 +88,21 @@ async function requisicao (_pagina) {
 
 }
 
+/***********************
+|  EXTRAÇÃO DOS DADOS  |
+***********************/
+
 async function extraiDados(bodyText){
+	
+	let emails = bodyText.match(regexEmail)
+	let telefones = bodyText.match(regexTelefone)
+	
+	let max = Math.max(emails.length, telefones.length);
+	
+	for (let i = 0; i < max; i++){
+		let str = 
+	}
+	
 	
 }
 
